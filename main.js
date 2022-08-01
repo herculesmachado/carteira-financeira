@@ -39,15 +39,18 @@ const transaction = [
     },
 ]
 
-const Transcription = {
+const Transaction = {
     income() {
-        //Adicionar o ganho
+        //Pegar todas as transções
+        // para cada transação, se for maior que 0 somar a uma varaivel e retornar a variavel
     },
     expense() {
         //Adiciona as perdas
+        return 'aqui'
     },
     total() {
         //Adiciona o total
+        return 'discover'
     }
 }
 
@@ -67,13 +70,14 @@ const DOM = {
     },
 
     innerHTMLTransaction(transaction) {
-
         //verifica se o numero é maior que 0, se sim, é ganho(income), senão e perda(expense)
         const CSSclass = transaction.amount > 0 ? 'income' : 'expense'
 
+        const amount = Utils.formatCurrency(transaction.amount)
+
         const html = `
         <td class="description">${transaction.description}</td>
-        <td class="${CSSclass}">${transaction.amount}</td>
+        <td class="${CSSclass}">${amount}</td>
         <td class="date">${transaction.date}</td>
         <td>
             <img src="./assets/assets/minus.svg" alt="Remover Transação">
@@ -81,13 +85,38 @@ const DOM = {
         `
 
         return html
-    } 
+    },
+
+    // Mostrar os valores atualizados 
+    updateBalance() {
+        document.getElementById('incomeDisplay').innerHTML.Transaction.income()
+
+        document.getElementById('expenseDisplay').innerHTML.Transaction.expense()
+
+        document.getElementById('totalDisplay').innerHTML.Transaction.total()
+    }
 }
 
 const Utils = {
     formatCurrency(value) {
         // To fazendo uma lógica na qual to forçando o dato (value) para ser um Number, e com isso to dizendo que se o (value) for menor que 0, add um -(negativo), caso não, não add nada
         const signal = Number(value) < 0 ? '-' : ''
+
+        // O "/\D/g" é uma caracteristica prorpia da expressão regular que pega todo o conteudo de string e transformando em puro numero
+        value = String(value).replace(/\D/g, '')
+
+        // Adiciona o ponto ao final do valor recebido 
+        value = Number(value) / 100
+
+        // Formatando a moeda para BRL (Real)
+        value = value.toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+
+        })
+        
+        return signal + value
+
     }
 }
 
@@ -95,3 +124,8 @@ const Utils = {
 transaction.forEach(function(transaction) {
     DOM.addTransaction(transaction)
 })
+
+// Chamanda do updateBalance
+DOM.updateBalance()
+
+
